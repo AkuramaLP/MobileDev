@@ -1,3 +1,6 @@
+
+var gameMaster = null;
+
 window.onload = function() {
-console.log(document.getElementById('gameCanvas2D'));
+  gameMaster = new GameMaster();
 };
