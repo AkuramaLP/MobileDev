@@ -4,6 +4,9 @@ function Player(id, type, callbackFunc) {
   var thiz = this;
   var playerImg = new Image(576, 256);
 
+  var lookDirection = 'left';
+  var stepCounter = 0;
+
   var spritePos = {
     'up': {
       'stepcount': 9,
@@ -69,9 +72,19 @@ function Player(id, type, callbackFunc) {
   var x = 0;
   var y = 0;
 
-  thiz.draw = function(ctx) {
+  thiz.draw = function(ctx, deltaTime) {
     if(ctx) {
-      ctx.drawImage(playerImg, 0, 0, spriteWidth, spriteHeight, x, y, spriteWidth, spriteHeight);
+
+      var sPos = spritePos[lookDirection].steps[stepCounter % spritePos[lookDirection].stepcount];
+
+      ctx.drawImage(playerImg, sPos[0], sPos[1], spriteWidth, spriteHeight, x, y, spriteWidth, spriteHeight);
+
+
+      if(deltaTime > 16)
+      {
+        stepCounter++;
+      }
+
     }
   };
 

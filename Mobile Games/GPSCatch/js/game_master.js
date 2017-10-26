@@ -10,6 +10,8 @@ function GameMaster() {
   var ctx3D = null;
   var ctxUi = null;
 
+  var start = null;
+
 
   function imageLoadedCallback(playerId) {
     var allImgsLoaded = true;
@@ -29,12 +31,21 @@ function GameMaster() {
     }
   }
 
-  function draw() {
-    if(ctxUi) {
-      for(var player in players) {
-        players[player].pObj.draw(ctxUi);
+  function draw(timestamp) {
+      var deltaT = timestamp - start;
+
+      console.log(deltaT);
+
+      if(ctxUi) {
+        ctxUi.clearRect(0, 0, ctxUi.canvas.width, ctxUi.canvas.height);
+
+        for(var player in players) {
+          players[player].pObj.draw(ctxUi, deltaT);
+        }
       }
-    }
+
+      start = timestamp;
+      window.requestAnimationFrame(draw);
   }
 
   function init() {
@@ -66,6 +77,11 @@ function GameMaster() {
     if(null !== canv2D) {
       ctxUi = canv2D.getContext('2d');
     }
+
+
+    var tmpDate = new Date();
+    start = tmpDate.getTime();
+    requestAnimationFrame(draw);
   }
 
   init();
