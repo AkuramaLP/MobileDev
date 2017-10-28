@@ -7,5 +7,6 @@
   "description": "A spimple location based game.",
   "author": "Jonathan Witt Dev",
   "icons": [],
+  "orientation": "portrait",
   "start_url": "index.html"
 }

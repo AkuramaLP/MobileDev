@@ -1,5 +1,5 @@
 
-function geolocationMaster(width, height, positionCb) {
+function GeolocationMaster(width, height, positionCb) {
 
   var thiz = this;
 
@@ -10,52 +10,46 @@ function geolocationMaster(width, height, positionCb) {
     [13.42161, 52.51358]
   ];
 
+  var lonMin = 0;
+  var latMin = 0;
+  var lonMax = 0;
+  var latMax = 0;
+
   var latHeight = 0;
   var lonWidth = 0;
 
-  var lonMin = 0;
-  var lonMax = 0;
-
-  var latMin = 0;
-  var latMax = 0;
-
-  thiz.getInitialPostition = function(errorCallback) {
-
+  thiz.getInitialPosition = function(errorCallback) {
     navigator.geolocation.getCurrentPosition(sCb,
                                          errorCallback,
                                          {
                                            timeout: 10000,
                                            enableHighAccuracy: false
                                          });
-
   }
 
-  this.requestPostionUpdate = function(errorCallback){
+  thiz.requestPositonUpdates = function(errorCallback) {
     watchId = navigator.geolocation.watchPosition(sCb,
-                                                  errorCallback,
-                                                  {
-                                                    timeout: 2000,
-                                                    enableHighAccuracy: true
-                                                  });
+                                         errorCallback,
+                                         {
+                                           timeout: 2000,
+                                           enableHighAccuracy: true
+                                         });
   }
 
-  thiz.stopRequestingPositionUpdates = function(){
-    if(watch) {
+  thiz.stopRequestingPositionUpdates = function() {
+    if(watchId) {
       navigator.geolocation.clearWatch(watchId);
     }
   }
 
   function sCb(position) {
-
-    console.log(position);
-
     if(positionCb) {
-    var x = ((position.coords.longitude - lonMin) / lonWidth) * width;
-    var y = height - (((position.coords.latitude - latMin) / latHeight) * height);
+      var x = ((position.coords.longitude - lonMin) / lonWidth) * width;
+      var y = height - (((position.coords.latitude - latMin) / latHeight) * height);
 
+      console.log(x + '  ' + y);
+      positionCb(x, y);
     }
-    console.log(x + ' ' + y);
-    positionCb(x, y);
   }
 
   function init() {
@@ -68,8 +62,9 @@ function geolocationMaster(width, height, positionCb) {
     lonWidth = lonMax - lonMin;
     latHeight = latMax - latMin;
 
-    console.log(lonWidth + ' ' + latHeight);
+    console.log(lonWidth + '  ' + latHeight);
   }
 
   init();
+
 }

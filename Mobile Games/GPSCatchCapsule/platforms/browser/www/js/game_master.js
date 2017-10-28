@@ -13,8 +13,7 @@ function GameMaster() {
   var start = null;
 
   var locMaster = null;
-
-
+  var accMaster = null;
 
   function imageLoadedCallback(playerId) {
     var allImgsLoaded = true;
@@ -57,6 +56,31 @@ function GameMaster() {
     players[0].pObj.setPosition(x, y);
   }
 
+  function accelerationCallback(accX, accY, accZ) {
+    if (accY * accY < accX * accX) {
+      if (accX < 0) {
+        dir = 'right';
+      }
+      else {
+        dir = 'left';
+      }
+    }
+    else {
+      if (accY > 0) {
+        dir = 'down';
+      }
+      else {
+        dir = 'up';
+      }
+    }
+
+    players[0].pObj.setDirection(dir);
+  }
+
+  function accelerationErrorCallback() {
+    console.log('acceleration could not be determined!');
+  }
+
   function init() {
     canv3D = document.getElementById('gameCanvas3D');
     canv3D.width = window.innerWidth;
@@ -90,9 +114,13 @@ function GameMaster() {
     start = tmpDate.getTime();
     requestAnimationFrame(draw);
 
-    locMaster = new geolocationMaster(canv2D.width, canv2D.height, positionCallback);
-    locMaster.getInitialPostition(geoPositionError);
-    locMaster.requestPostionUpdate(geoPositionError);
+    locMaster = new GeolocationMaster(canv2D.width, canv2D.height, positionCallback);
+    locMaster.getInitialPosition(geoPositionError);
+    locMaster.requestPositonUpdates(geoPositionError);
+
+    accMaster = new AccelerationMaster(accelerationCallback);
+    //accMaster.getAcceleration(accelerationErrorCallback);
+    accMaster.requestAccelerationUpdates(accelerationErrorCallback);
   }
 
   init();

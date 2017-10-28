@@ -38,16 +38,19 @@ function Player(id, type, callbackFunc) {
     }
   };
 
-
   var spriteWidth = 64;
   var spriteHeight = 64;
 
   var x = 0;
   var y = 0;
 
-  thiz.setPosition = function(newX, newY){
-    x = newX;
-    y = newY;
+  thiz.setPosition = function(xNew, yNew) {
+    x = xNew;
+    y = yNew;
+  }
+
+  thiz.setDirection = function(direction) {
+    lookDirection = direction;
   }
 
   thiz.draw = function(ctx, deltaT) {
@@ -55,7 +58,7 @@ function Player(id, type, callbackFunc) {
       var sPos = spritePos[lookDirection].steps[stepCounter % spritePos[lookDirection].stepCount];
 
       ctx.drawImage(playerImg, sPos[0], sPos[1], spriteWidth, spriteHeight,
-                    x - (spriteWidth/2), y - (spriteHeight / 2), spriteWidth, spriteHeight);
+                    x-spriteWidth/2, y-spriteHeight/2, spriteWidth, spriteHeight);
 
       //deltaT
       stepCounter++;
