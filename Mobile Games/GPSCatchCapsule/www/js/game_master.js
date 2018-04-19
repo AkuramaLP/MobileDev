@@ -15,6 +15,7 @@ function GameMaster() {
   var locMaster = null;
   var accMaster = null;
   var vibMaster = null;
+  var commMaster = null;
 
   function imageLoadedCallback(playerId) {
     var allImgsLoaded = true;
@@ -55,6 +56,15 @@ function GameMaster() {
 
   function positionCallback(x, y) {
     players[0].pObj.setPosition(x, y);
+  }
+
+  function collisionCallback(boolVal){
+    if(!boolVal) {
+      players[0].pObj.drawLoadedImage(ctxUi, null);
+    }
+    else {
+      players[0].pObj.drawLoadedImage(ctxUi, './gfx/burger.png');
+    }
   }
 
   function accelerationCallback(accX, accY, accZ) {
@@ -116,7 +126,7 @@ function GameMaster() {
     start = tmpDate.getTime();
     requestAnimationFrame(draw);
 
-    locMaster = new GeolocationMaster(canv2D.width, canv2D.height, positionCallback);
+    locMaster = new GeolocationMaster(canv2D.width, canv2D.height, positionCallback, collisionCallback);
     locMaster.getInitialPosition(geoPositionError);
     locMaster.requestPositonUpdates(geoPositionError);
 
@@ -125,6 +135,8 @@ function GameMaster() {
     accMaster.requestAccelerationUpdates(accelerationErrorCallback);
 
     vibMaster = new VibrationMaster();
+
+    comMaster = new CommunicationMaster();
 
   }
 

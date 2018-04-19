@@ -9,7 +9,7 @@ function VibrationMaster () {
   }
 
 
-  this.vibratePlayerReachedBorder = function() {
+  thiz.vibratePlayerReachedBorder = function() {
     if(!runningVibPattern) {
       runningVibPattern = true;
 
@@ -19,6 +19,12 @@ function VibrationMaster () {
         navigator.vibrate([1000, 200, 1000]);
       }
 
+    }
+  }
+
+  thiz.reset = function() {
+    if(navigator.vibrate) {
+      navigator.vibrate(0);
     }
   }
 

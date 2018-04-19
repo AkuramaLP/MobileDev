@@ -3,6 +3,7 @@ function Player(id, type, callbackFunc) {
 
   var thiz = this;
   var playerImg = new Image(576, 256);
+  var thinkingImg = new Image(50, 50);
 
   var lookDirection = 'down';
   var stepCounter = 8;
@@ -53,12 +54,30 @@ function Player(id, type, callbackFunc) {
     lookDirection = direction;
   }
 
+  thiz.drawLoadedImage = function(ctx, imgPath) {
+    if(imgPath) {
+      if(ctx) {
+        thinkingImg.onload = function() {
+          ctx.drawImage(imgPath, x, y - (spriteHeight/2) - thinkingImg.height);
+        }
+
+        thinkingImg.src = imgPath;
+      }
+    }
+    else {
+      thinkingImg.src = null;
+    }
+  }
+
   thiz.draw = function(ctx, deltaT) {
     if(ctx) {
       var sPos = spritePos[lookDirection].steps[stepCounter % spritePos[lookDirection].stepCount];
 
       ctx.drawImage(playerImg, sPos[0], sPos[1], spriteWidth, spriteHeight,
                     x-spriteWidth/2, y-spriteHeight/2, spriteWidth, spriteHeight);
+
+      //Thinkting Image
+      ctx.drawImage(thinkingImg, x, y - (spriteHeight/2) - thinkingImg.height);
 
       //deltaT
       stepCounter++;

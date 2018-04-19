@@ -29,18 +29,24 @@ function AccelerationMaster(accCb) {
   }
 
   thiz.getAcceleration = function(errorCb) {
-    navigator.accelerometer.getCurrentAcceleration(successCallback, errorCb);
+    if(navigator.accelerometer) {
+      navigator.accelerometer.getCurrentAcceleration(successCallback, errorCb);
+    }
   }
 
   thiz.requestAccelerationUpdates = function(errorCb) {
-    accWatchId = navigator.accelerometer.watchAcceleration(successCallback,
-                                                           errorCb,
-                                                           { frequency: 500 });
+    if(navigator.accelerometer) {
+      accWatchId = navigator.accelerometer.watchAcceleration(successCallback,
+                                                             errorCb,
+                                                             { frequency: 500 });
+      }
   }
 
   thiz.stopRequestingAccelerationUpdates = function() {
     if(accWatchId) {
-      navigator.accelerometer.clearWatch(accWatchId);
+      if(navigator.accelerometer) {
+        navigator.accelerometer.clearWatch(accWatchId);
+      }
     }
   }
 
