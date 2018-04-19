@@ -2,7 +2,7 @@ function CommunicationMaster (pHash) {
 
   var thiz = this;
 
-  var socket = new WebSocket('ws://10.1.1.157:8080');
+  var socket = new WebSocket('ws://192.168.178.72:8080');
 
   socket.onopen = function() {
     if(socket && socket.readyState == 1) {
@@ -14,12 +14,12 @@ function CommunicationMaster (pHash) {
       socket.send(JSON.stringify(data));
     }
   };
-  
+
   // Log errors
   socket.onerror = function(error) {
     console.log('WebSocket Error ' + error);
   };
-  
+
   // Log messages from the server
   socket.onmessage = function(e) {
     console.log('Server: ' + e.data);

@@ -60,7 +60,7 @@ function Player(id, type, callbackFunc) {
 
     while (i < input.length) {
         chr1 = input[i++];
-        chr2 = i < input.length ? input[i++] : Number.NaN; // Not sure if the index 
+        chr2 = i < input.length ? input[i++] : Number.NaN; // Not sure if the index
         chr3 = i < input.length ? input[i++] : Number.NaN; // checks are needed here
 
         enc1 = chr1 >> 2;
@@ -104,7 +104,7 @@ function Player(id, type, callbackFunc) {
       }
     }
     else {
-      
+      //TODO: Dozent sagen dass Burger nicht weg geht!
       //thinkingImg.src = '';
     }
   }
@@ -115,7 +115,7 @@ function Player(id, type, callbackFunc) {
 
       ctx.drawImage(playerImg, sPos[0], sPos[1], spriteWidth, spriteHeight,
                     x-spriteWidth/2, y-spriteHeight/2, spriteWidth, spriteHeight);
-      
+
       // THINKING IMAGE
       ctx.drawImage(thinkingImg, x, y-(spriteHeight/2)-thinkingImg.height);
 

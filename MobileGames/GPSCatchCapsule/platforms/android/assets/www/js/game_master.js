@@ -15,6 +15,7 @@ function GameMaster() {
   var locMaster = null;
   var accMaster = null;
   var vibMaster = null;
+  var commMaster = null;
 
   function imageLoadedCallback(playerId) {
     var allImgsLoaded = true;
@@ -134,6 +135,8 @@ function GameMaster() {
     accMaster.requestAccelerationUpdates(accelerationErrorCallback);
 
     vibMaster = new VibrationMaster();
+
+    comMaster = new CommunicationMaster();
 
   }
 
