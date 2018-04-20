@@ -3,6 +3,7 @@ function GameMaster() {
   var thiz = this;
 
   var players = {};
+  var selfId = navigator.userAgent + (new Date().getTime());
 
   var canv3D = null;
   var canv2D = null;
@@ -22,7 +23,6 @@ function GameMaster() {
 
     for(var pElem in players) {
       if(playerId == pElem) {
-        console.log('player loaded: ' + playerId);
         players[pElem].imageLoaded = true;
       }
       else if(!players[pElem].imageLoaded) {
@@ -55,15 +55,16 @@ function GameMaster() {
   }
 
   function positionCallback(x, y) {
-    players[0].pObj.setPosition(x, y);
+    players[selfId].pObj.setPosition(x, y);
+    commMaster.sendPosition(x, y);
   }
 
-  function collisionCallback(boolVal){
+  function collisionCallback(boolVal) {
     if(!boolVal) {
-      players[0].pObj.drawLoadedImage(ctxUi, null);
+      players[selfId].pObj.drawLoadedImage(ctxUi, null);
     }
     else {
-      players[0].pObj.drawLoadedImage(ctxUi, './gfx/burger.png');
+      players[selfId].pObj.drawLoadedImage(ctxUi, './gfx/burger.png');
     }
   }
 
@@ -79,14 +80,14 @@ function GameMaster() {
     else {
       if (accY > 0) {
         dir = 'down';
-        vibMaster.vibratePlayerReachedBorder();
+        //vibMaster.vibratePlayerReachedBorder();
       }
       else {
         dir = 'up';
       }
     }
 
-    players[0].pObj.setDirection(dir);
+    players[selfId].pObj.setDirection(dir);
   }
 
   function accelerationErrorCallback() {
@@ -102,8 +103,8 @@ function GameMaster() {
     canv2D.width = window.innerWidth;
     canv2D.height = window.innerHeight;
 
-    players[0] = {
-      pObj: new Player(0, 0, imageLoadedCallback),
+    players[selfId] = {
+      pObj: new Player(selfId, 0, imageLoadedCallback),
       imageLoaded: false
     };
     /*
@@ -136,18 +137,47 @@ function GameMaster() {
 
     vibMaster = new VibrationMaster();
 
-    comMaster = new CommunicationMaster();
-
+    commMaster = new CommunicationMaster(selfId,
+        function(data) {
+          if(data && data.pId) {
+            if(data.connected) {
+              if(!players[data.pId]) {
+                players[data.pId] = {
+                  pObj: new Player(data.pId, 1, imageLoadedCallback),
+                  imageLoaded: false
+                };
+              }
+              
+              if(data.position && data.position.x && data.position.y) {
+                players[data.pId].pObj.setPosition(data.position.x, data.position.y);
+              }
+            }
+            else {
+              for(var key in players) {
+                if(data.pId === key) {
+                  delete players[key];
+                  break;
+                }
+              }
+            }
+          }
+        },
+        function() {
+          
+        }
+    );
   }
 
   thiz.pause = function() {
+    console.log('pause');
+
     if(vibMaster) {
       vibMaster.reset();
     }
   }
 
   thiz.resume = function() {
-
+    console.log('resume');
   }
 
   init();

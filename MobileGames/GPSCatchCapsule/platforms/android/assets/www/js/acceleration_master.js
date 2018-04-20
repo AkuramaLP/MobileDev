@@ -39,14 +39,12 @@ function AccelerationMaster(accCb) {
       accWatchId = navigator.accelerometer.watchAcceleration(successCallback,
                                                              errorCb,
                                                              { frequency: 500 });
-      }
+    }
   }
 
   thiz.stopRequestingAccelerationUpdates = function() {
-    if(accWatchId) {
-      if(navigator.accelerometer) {
-        navigator.accelerometer.clearWatch(accWatchId);
-      }
+    if(accWatchId && navigator.accelerometer) {
+      navigator.accelerometer.clearWatch(accWatchId);
     }
   }
 

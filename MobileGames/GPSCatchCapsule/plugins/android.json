@@ -21,6 +21,9 @@
     },
     "cordova-plugin-vibration": {
       "PACKAGE_NAME": "de.games_academy.pro2016ber.gpscatch_jw"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "de.games_academy.pro2016ber.gpscatch_jw"
     }
   },
   "dependent_plugins": {}

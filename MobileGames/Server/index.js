@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 
-//List of connected players
 var pSockets = {};
+
 
 const wss = new WebSocket.Server({
     port: 8080,
@@ -15,39 +15,74 @@ wss.on('connection', function connection(ws) {
       var data = JSON.parse(message);
 
       switch(data.fCode) {
-        //Client Connected to server
-
+        // Neuanmeldung
         case 0:
-            //Get Player ID form JSON Data
-            conPlayerId = data.pId;
-            //Add Client to List of connected Clients
-            pSockets[data.pId] = ws;
-            console.log("got id");
-            break;
+            if(data && data.pId) {
+                conPlayerId = data.pId;
 
-        //Client sends Position
+                var dataToSend = new Array();
+
+                for(var pS in pSockets) {
+                    pSockets[pS].socket.send(message);
+
+                    dataToSend.push({
+                        pId: pS,
+                        position: pSockets[pS].position
+                    });
+                }
+
+                ws.send(JSON.stringify(
+                    {
+                        fCode: 3,
+                        existingPlayers: dataToSend
+                    }
+                ));
+
+                pSockets[data.pId] = {
+                    socket: ws,
+                    position: {
+                        x: 0,
+                        y: 0
+                    }
+                };
+                
+                console.log("Connected: " + conPlayerId);
+            }
+            break;
+        // Positionsmitteilung
         case 1:
-            for(pS in pSockets) {
-                //Check if current element isnt the sender
-                if(pS != data.pId) {
-                    //sends Position to client
-                    pSockets[ps].send(message);
+            if(data.pId) {
+                if(data.position) {
+                    pSockets[data.pId].position = data.position;
+                }
+
+                for(var pS in pSockets) {
+                    if(pS != data.pId) {
+                        pSockets[pS].socket.send(message);
+                    }
                 }
             }
+            
             break;
       }
     });
 
-    //Client disconnected
     ws.on('close', function close() {
+        var data = {
+            pId: conPlayerId,
+            // Player abgemeldet
+            fCode: 2
+        };
+
         delete pSockets[conPlayerId];
+
+        console.log("Disconnected: " + conPlayerId);
         delete conPlayerId;
 
-        //Send all clients that a userhas disconnected
-        for(pS in pSockets) {
-            pSockets[ps].send(message);
+        for(var pS in pSockets) {
+            pSockets[pS].socket.send(JSON.stringify(data));
         }
     });
 
-    ws.send('something');
-  });
+    //ws.send('something');
+});

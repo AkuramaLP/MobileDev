@@ -52,10 +52,9 @@ function GeolocationMaster(width, height, positionCb, collisionCb) {
     }
 
     if(collisionCb) {
-      //Check if Player is in Collision Box to display Icon
       if((52.51304 < position.coords.latitude && position.coords.latitude < 52.51309) &&
          (13.42006 < position.coords.longitude && position.coords.longitude < 13.42010)) {
-            collisionCb(true);
+          collisionCb(true);
       }
       else {
         collisionCb(false);

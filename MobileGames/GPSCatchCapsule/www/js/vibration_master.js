@@ -1,25 +1,12 @@
-function VibrationMaster () {
+
+function VibrationMaster() {
 
   var thiz = this;
 
-  var runningVibPattern = false;
-
-  function clearVibrationPreventuion() {
-    runningVibPattern = false;
-  }
-
-
   thiz.vibratePlayerReachedBorder = function() {
-    if(!runningVibPattern) {
-      runningVibPattern = true;
-
-      window.setTimeout(clearVibrationPreventuion, 2400);
-
       if(navigator.vibrate) {
-        navigator.vibrate([1000, 200, 1000]);
+        navigator.vibrate([30000]);
       }
-
-    }
   }
 
   thiz.reset = function() {

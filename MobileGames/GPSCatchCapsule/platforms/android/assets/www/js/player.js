@@ -9,6 +9,7 @@ function Player(id, type, callbackFunc) {
   xmlHttpRequest.responseType = 'arraybuffer';
   xmlHttpRequest.onload = function() {
     thinkingImg.src = 'data:image/png;base64,' + encode(new Uint8Array(xmlHttpRequest.response));
+    console.log('loaded image');
   }
 
 
@@ -89,6 +90,7 @@ function Player(id, type, callbackFunc) {
   }
 
   thiz.drawLoadedImage = function(ctx, imgPath) {
+    console.log("I PATH: " + imgPath);
     if(imgPath) {
       if(ctx) {
         /*
@@ -104,8 +106,7 @@ function Player(id, type, callbackFunc) {
       }
     }
     else {
-      
-      //thinkingImg.src = '';
+      thinkingImg.src = '';
     }
   }
 
@@ -143,4 +144,5 @@ function Player(id, type, callbackFunc) {
   }
 
   init();
+
 }

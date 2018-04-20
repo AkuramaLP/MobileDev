@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "gpscatchserver",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,7 +7,7 @@
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Jonathan Witt",
+  "author": "Johannes Georg",
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
