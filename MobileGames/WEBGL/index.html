@@ -1,0 +1,46 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>WebGL meets Gamepad</title>
+
+  <link rel="stylesheet" href="./css/main.css">
+
+  
+  <script src="./js/external/glMatrix-0.9.3.min.js"></script>
+
+
+  <script src="./js/main.js"></script>
+  <script src="./js/gamepadMaster.js"></script>
+  <script src="./js/glMaster.js"></script>
+
+  <script id="fShader" type="x-shader/x-fragment">
+    precision mediump float;
+
+    void main(void) {
+      gl_FragColor = vec4(0.9, 0.3, 0.6, 1.0);
+    }
+  </script>
+
+  <script id="vertexShader" type="x-shader/x-vertex">
+    attribute vec3 Position;
+
+    uniform mat4 u_ModelView;
+    uniform mat4 u_Persp;
+
+    void main(void) {
+      gl_Position = u_Persp * u_ModelView * vec4(Position, 1.0);
+    }
+  </script>
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <canvas id="gameView"></canvas>
+</body>
+</html>

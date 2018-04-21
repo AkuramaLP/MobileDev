@@ -55,6 +55,20 @@ module.exports = [
         "merges": [
             "navigator.notification"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-battery-status/www/battery.js",
+        "id": "cordova-plugin-battery-status.battery",
+        "pluginId": "cordova-plugin-battery-status",
+        "clobbers": [
+            "navigator.battery"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-battery-status/src/browser/BatteryProxy.js",
+        "id": "cordova-plugin-battery-status.Battery",
+        "pluginId": "cordova-plugin-battery-status",
+        "runs": true
     }
 ];
 module.exports.metadata = 
@@ -66,7 +80,8 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.3.2",
     "cordova-plugin-device-motion": "1.2.5",
     "cordova-plugin-vibration": "2.1.5",
-    "cordova-plugin-dialogs": "2.0.1"
+    "cordova-plugin-dialogs": "2.0.1",
+    "cordova-plugin-battery-status": "2.0.2"
 }
 // BOTTOM OF METADATA
 });

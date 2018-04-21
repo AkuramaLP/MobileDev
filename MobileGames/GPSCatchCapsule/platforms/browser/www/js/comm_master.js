@@ -1,74 +1,78 @@
 
-function CommunicationMaster(pHash, playerChngdCb) {
+function CommunicationMaster(pHash, playerChngdCb, onlineCb) {
 
   var thiz = this;
 
-  var socket = new WebSocket('ws://10.1.1.121:8080');
-  socket.onopen = function() {
-    if(socket && socket.readyState == 1) {
-      var data = {
-        pId: pHash,
-        fCode: 0,
-        position: {
-          x: 0,
-          y: 0
-        }
-      };
-      
-      console.log(data);
-      socket.send(JSON.stringify(data));
-    }
-  };
+  var socket;
   
-  socket.onerror = function(error) {
-    console.log('WebSocket Error ' + error);
-  };
-  
-  socket.onmessage = function(e) {
-    var data = JSON.parse(e.data);
+  function init() {
+    socket = new WebSocket('ws://10.1.1.121:8080');
+    socket.onopen = function() {
+      if(socket && socket.readyState == 1) {
+        var data = {
+          pId: pHash,
+          fCode: 0,
+          position: {
+            x: 0,
+            y: 0
+          }
+        };
+        
+        console.log(data);
+        socket.send(JSON.stringify(data));
+      }
+    };
+    
+    socket.onerror = function(error) {
+      console.log('WebSocket Error ' + error);
+    };
+    
+    socket.onmessage = function(e) {
+      var data = JSON.parse(e.data);
 
-    switch(data.fCode) {
-      // Neuanmeldung
-      case 0:
-      // Positionsmitteilung
-      case 1:
+      switch(data.fCode) {
+        // Neuanmeldung
+        case 0:
+        // Positionsmitteilung
+        case 1:
+            if(data && data.pId && playerChngdCb) {
+              playerChngdCb(
+                {
+                  pId: data.pId,
+                  connected: true,
+                  position: data.position
+                }
+              );
+            }
+            break;
+        // Spielerabmeldung
+        case 2:
           if(data && data.pId && playerChngdCb) {
             playerChngdCb(
               {
                 pId: data.pId,
-                connected: true,
-                position: data.position
+                connected: false
               }
             );
           }
           break;
-      // Spielerabmeldung
-      case 2:
-        if(data && data.pId && playerChngdCb) {
-          playerChngdCb(
-            {
-              pId: data.pId,
-              connected: false
+        // Vorhandene Spieler werden dem neuen Spieler mitgeteilt
+        case 3:
+          if(data && data.existingPlayers) {
+            for(var i=0; i<data.existingPlayers.length; i++) {
+              playerChngdCb(
+                {
+                  pId: data.existingPlayers[i].pId,
+                  connected: true,
+                  position: data.existingPlayers[i].position
+                }
+              );
             }
-          );
-        }
-        break;
-      // Vorhandene Spieler werden dem neuen Spieler mitgeteilt
-      case 3:
-        if(data && data.existingPlayers) {
-          for(var i=0; i<data.existingPlayers.length; i++) {
-            playerChngdCb(
-              {
-                pId: data.existingPlayers[i].pId,
-                connected: true,
-                position: data.existingPlayers[i].position
-              }
-            );
           }
-        }
-        break;
-    }
-  };
+          break;
+      }
+    };
+  }
 
 
   thiz.sendPosition = function(x, y) {
@@ -86,4 +90,34 @@ function CommunicationMaster(pHash, playerChngdCb) {
     }
   };
 
+
+  function onOffCb(isOnline) {
+    if(isOnline) {
+      if(onlineCb) {
+        onlineCb();
+      }
+
+      init();
+
+      navigator.notification.alert(
+        'You are (back) online',
+        null,
+        'Online / Offline',
+        'Thanks'
+      );
+    }
+    else {
+      navigator.notification.alert(
+        'You are offline',
+        null,
+        'Online / Offline',
+        'Thanks'
+      );
+    }
+  }
+
+  document.addEventListener('online', onOffCb(true));
+  document.addEventListener('offline', onOffCb(false));
+
+  init();
 }

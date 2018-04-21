@@ -2,6 +2,8 @@
 function GameMaster() {
   var thiz = this;
 
+  var running = false;
+
   var players = {};
   var selfId = navigator.userAgent + (new Date().getTime());
 
@@ -17,6 +19,7 @@ function GameMaster() {
   var accMaster = null;
   var vibMaster = null;
   var commMaster = null;
+  var energyMaster = null;
 
   function imageLoadedCallback(playerId) {
     var allImgsLoaded = true;
@@ -31,23 +34,25 @@ function GameMaster() {
     }
 
     if(allImgsLoaded) {
-      draw();
+      requestAnimationFrame(draw);
     }
   }
 
   function draw(timestamp) {
-    var deltaT = timestamp - start;
+    if(running) {
+      var deltaT = timestamp - start;
 
-    if(ctxUi) {
-      ctxUi.clearRect(0, 0, ctxUi.canvas.width, ctxUi.canvas.height);
-
-      for(var player in players) {
-        players[player].pObj.draw(ctxUi, deltaT);
+      if(ctxUi) {
+        ctxUi.clearRect(0, 0, ctxUi.canvas.width, ctxUi.canvas.height);
+  
+        for(var player in players) {
+          players[player].pObj.draw(ctxUi, deltaT);
+        }
       }
+  
+      start = timestamp;
+      requestAnimationFrame(draw);
     }
-
-    start = timestamp;
-    requestAnimationFrame(draw);
   }
 
   function geoPositionError(error) {
@@ -137,6 +142,15 @@ function GameMaster() {
 
     vibMaster = new VibrationMaster();
 
+    energyMaster = new EnergyMaster(function(fullConsumptMode) {
+      if(fullConsumptMode) {
+        thiz.resume();
+      }
+      else {
+        thiz.pause();
+      }
+    });
+
     commMaster = new CommunicationMaster(selfId,
         function(data) {
           if(data && data.pId) {
@@ -169,7 +183,9 @@ function GameMaster() {
   }
 
   thiz.pause = function() {
-    console.log('pause');
+    if(running) {
+      running = false;
+    }
 
     if(vibMaster) {
       vibMaster.reset();
@@ -177,7 +193,10 @@ function GameMaster() {
   }
 
   thiz.resume = function() {
-    console.log('resume');
+    if(!running) {
+      running = true;
+      requestAnimationFrame(draw);
+    }
   }
 
   init();

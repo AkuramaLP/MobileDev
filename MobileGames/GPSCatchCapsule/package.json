@@ -13,6 +13,7 @@
   "dependencies": {
     "cordova-android": "^6.3.0",
     "cordova-browser": "^5.0.1",
+    "cordova-plugin-battery-status": "^2.0.2",
     "cordova-plugin-compat": "^1.2.0",
     "cordova-plugin-console": "^1.1.0",
     "cordova-plugin-device-motion": "^1.2.5",
@@ -28,7 +29,8 @@
       "cordova-plugin-console": {},
       "cordova-plugin-device-motion": {},
       "cordova-plugin-vibration": {},
-      "cordova-plugin-dialogs": {}
+      "cordova-plugin-dialogs": {},
+      "cordova-plugin-battery-status": {}
     },
     "platforms": [
       "android",
